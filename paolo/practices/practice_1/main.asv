@@ -1,7 +1,4 @@
 % MIMO
-%
-%
-
 clear all; close all; clc
 
 %% define a transfer function
@@ -15,24 +12,33 @@ G22 = 2 /((s+2)*(s+3));
 G = [G11 G12
      G21 G22];
 
-%% poles and zeros
+%% 1,2) poles and zeros point 
 poles_G = pole(G)   % -3 -3 -3 -2 -2 -1
 zeros_G = tzero(G)  % -3 -1 -1 
 
 poles_G11 = pole(G11) % -3 -1 
 zeros_G11 = tzero(G11) % -1
 
-poles_G12 = pole(G12) %
-zeros_G12 = tzero(G12)
+poles_G12 = pole(G12) % -3 -2
+zeros_G12 = tzero(G12) % 
 
-poles_G21 = pole(G21)
-zeros_G21 = tzero(G21)
+poles_G21 = pole(G21) % -3 -2
+zeros_G21 = tzero(G21) % 
 
-poles_G22 = pole(G22)
-zeros_G22 = tzero(G22)
+poles_G22 = pole(G22) % -3 -2
+zeros_G22 = tzero(G22) %
 
+%% 3) simulink,  ||Y||_2 / ||U||_2
+[A, B, C, D] = ssdata(G)
+U = [3 6];   % ampiezza degli input
+f = [2 2];   % frequenza degli input
+phi = [0 0];   % frequenza degli input
 
+norm_U = norm(U, 2)   % fa la norma 2 del vettore U
 
+% open('frequence_response')
+Yt = sim('frequence_response')   % sim esegue il simulink,   Yt = prende l'output del sim e lo da alla var Yt
 
-
+% to have te norm of Y i have to not take into account transitory so I
+% start after 60 time instants
 
