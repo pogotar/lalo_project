@@ -1,0 +1,29 @@
+% LQR controller & kalman filter
+
+clear all; close all; clc
+
+% from 1) to 6) we assume to know the x
+
+%% 1) poles and zeros of L
+s = tf('s');
+G = 0.5 / (s^2+0.4*s+1);
+poles_G = pole(G)
+zeros_G = tzero(G)
+
+
+%% 2) state space rappresentation of the system
+[A, B, C, D] = ssdata(G);
+
+
+%% 3) design LQR
+% Q = I (da il peso alle x)   R = 1 (da il peso alle u)   cl eig are as?
+Q = eye(2);
+R = 1;
+[k_LQ, P, cl_poles] = lqr(A, B, Q, R)
+
+% or otherwise
+cl = A-B*k_LQ;  
+poles_cl = eig(cl) % 2 method
+
+F = (eye(2)+L)/L;
+poles_cl = pole()
