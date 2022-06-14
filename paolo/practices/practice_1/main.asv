@@ -11,6 +11,8 @@ G22 = 2 /((s+2)*(s+3));
 
 G = [G11 G12
      G21 G22];
+% I have a zero in zero, I have to be careful not to put integrators
+% otherwi
 
 
 %% 1,2) poles and zeros  
@@ -110,16 +112,42 @@ U3_max = [4 6];   % ampiezza degli input
 out_sim3 = sim('frequence_response_3')  
 Y3_max = [ max( out_sim3.Yt.Data(60:end,1)) , max( out_sim3.Yt.Data(60:end,2))]  % now the Y is not 0
 
+
 %% 6)  R(s) = I  is cl AS?
 % use small gain theorem  (infinite norm)
 % ||L||_inf < 1   then F is AS
 R = eye(2);
-norm_L6 = norm(G*R,inf)
+norm_L6 = norm(G*R,inf) % va a 0.7683
+
 
 %% 7) R = 1/s * eye(2)   cl stab?
 R = 1/s*eye(2);
-norm_L7 = norm(G*R,inf)
-% not stble if I have a zero in zero and I put a pole 
+L = R*G;
+norm_L7 = norm(L,inf) % va a inf
+% not stable if I have a zero in zero and I put a pole in zero there are
+% cancellations, there is this theorem
+% a sys composed by several blocks is AS if:
+% - no hidden cancellations of unstable modes (here we do not satisfy)
+% - bounded inputs applied at any points of the sys produce bounded outputs
+%   at any point of the sys 
+
+% let's see the cl
+
+F = (eye(2)+L)/L;
+F = minreal(F);    % cancels almost cancelations
+poles_F = pole(F) % every pole is zero (there is one positive but it is an error, it is super small)
+% but I can't expect stability (or goog tracking of the reference signal)
+% cuse of the comment before (check also point 8)
+zeros_F = tzero(F)
+
+
+%% 8) simu_4  R = 1/s * eye(2)   cl stab?
+
+% check frequenze response 4
+% imagine a tank with no bottom and I try to stabilise the level with a
+% pump
+
+
 
 
 

@@ -11,6 +11,8 @@ G22 = 2 /((s+2)*(s+3));
 
 G = [G11 G12
      G21 G22];
+% I have a zero in zero, I have to be careful not to put integrators
+% otherwise (see point 8) I will obtain an unstable sys
 
 
 %% 1,2) poles and zeros  
@@ -141,9 +143,21 @@ zeros_F = tzero(F)
 
 %% 8) simu_4  R = 1/s * eye(2)   cl stab?
 
+% check frequence response 4
+% imagine a tank with no bottom and I try to stabilise the level with a
+% pump
 
+%% 9) 10) pick the old sys and change C
+% teacher purposefully makes me do it so that I won't have a zero in zero
+% and so a controller with an integrator in closed loop will give me no
+% prob
 
+C_new = [1 1 0 0
+         0 0 1 1];
 
+G_new = ss(A, B, C_new, D);
+poles_G_new = pole(G_new) % no zero in zero
+zeros_G_new = tzero(G_new)
 
-
-
+% now try the integrators and should be fine 
+% check frequence response 5
