@@ -65,8 +65,9 @@ power_vx=0.01
 power_vy=0.1
 
 % Kalman filter parameters (necessary for obtaining L)
-Q_tilde = eye(2);
-R_tilde = 1;
+Q_tilde = eye(2);        % var di Vx
+R_tilde = 1;             % var i Vy
+Z = 0;                   % covariance between Vx and Vy (simulink la chiama N)
 x0_tilde = 10*x0;        % Kalman filter initial guess (to start)
 
 % il primpo temp era per far uscire dal blocco la x e non la y

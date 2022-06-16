@@ -52,21 +52,28 @@ k_LQ_2 = lqr(A, B, Q2, R2)
 k_LQ_3 = lqr(A, B, Q3, R3)
 
 sim('regulator_LQR_1')
-open('regulator_LQR_1')
+% open('regulator_LQR_1')
 
 
 %% 7)  LQG 
 % no measures of x
 % but want to do the same things
+% il mio modello è impreciso, non tiene conto dei white noise (non ci sono nel blocco)
 
 % variables for the sim
 power_vx=0.01
 power_vy=0.1
 
 % Kalman filter parameters (necessary for obtaining L)
-Q_tilde = eye(2);
+Q_tilde = eye(2);   
 R_tilde = 1;
-x0_tilde = 10*x0        % Kalman filter initial guess (to start)
+x0_tilde = 10*x0;        % Kalman filter initial guess (to start)
 
+% il primpo temp era per far uscire dal blocco la x e non la y
+% C_temp = eye(length(A))               
+% D_temp = zeros(length(B), 1) 
+% questo temp serve per gestire l'ingresso con anche il gaussian noise
+B_temp2 = [B ones(length(B),1)];
+D_temp2 = [D_temp zeros(length(D_temp),1)];
 
-
+% in Kalman ci vanno i normali A,B,C,D
