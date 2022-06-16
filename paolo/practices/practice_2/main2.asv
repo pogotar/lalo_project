@@ -65,8 +65,9 @@ power_vx=0.01
 power_vy=0.1
 
 % Kalman filter parameters (necessary for obtaining L)
-Q_tilde = eye(2);   
-R_tilde = 1;
+Q_tilde = eye(2);        % var di Vx
+R_tilde = 1;             % var i Vy
+Z = 0;                   % covariance between Vx and Vy (simulink la chiama N)
 x0_tilde = 10*x0;        % Kalman filter initial guess (to start)
 
 % il primpo temp era per far uscire dal blocco la x e non la y
@@ -77,3 +78,17 @@ B_temp2 = [B ones(length(B),1)];
 D_temp2 = [D_temp zeros(length(D_temp),1)];
 
 % in Kalman ci vanno i normali A,B,C,D
+
+
+%% 8) faster convergence of the kalman filter 
+% modify R_tilde 
+% pro: se + piccola L più grossa, autovalore dell' errore + negativo, dinamica 
+%      dell'arrore tra x e xpredetta più corta
+% con: L + grossa, il kalman filter darà più peso a y nella predizione di x
+
+R_tilde2 = R_tilde*0.001; 
+
+% Q gives me an idea of how much my rappresentation of the sys is good
+% if Vx is really really big (
+% if I know that my y is affected by a noise that is 10 times the noise on
+% the x I could set the R = 10*Q

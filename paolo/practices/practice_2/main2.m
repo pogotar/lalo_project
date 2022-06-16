@@ -78,3 +78,31 @@ B_temp2 = [B ones(length(B),1)];
 D_temp2 = [D_temp zeros(length(D_temp),1)];
 
 % in Kalman ci vanno i normali A,B,C,D
+
+
+%% 8) faster convergence of the kalman filter 
+% modify R_tilde 
+% pro: se + piccola L più grossa, autovalore dell' errore + negativo, dinamica 
+%      dell'arrore tra x e xpredetta più corta, kalman filter da una buona
+%      predizione della x più velocemente
+% con: L + grossa, il kalman filter darà più peso a y nella predizione di x
+%      questo vuol dire che se y fa schifo anche la predizione, sarà più
+%      veloce ma farà schifo
+
+R_tilde2 = R_tilde*0.001; 
+
+% Q gives me an idea of how much my rappresentation of the sys is good
+
+% for example
+% if I know that my y is affected by a noise that is 10 times the noise on
+% the x I could set the R = 10*Q per informare che mi fido molto poco del
+% segnale y
+
+
+%% 9) reduce meas noise on state espimation
+R_tilde3 = R_tilde*100; 
+
+
+% open sim regulator LQG_2
+
+% 05_03    ora 1:09   arriva alla fine della practice 2
