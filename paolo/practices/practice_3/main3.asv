@@ -1,0 +1,20 @@
+% LQR controller & kalman filter
+
+clear all; close all; clc    % 05_03    ora 1:09 
+
+%% 1) discretise the system, poles and zeros
+s = tf('s');
+G = 0.5 / (s^2+0.4*s+1);
+T_sampling = 0.1;   % seconds
+
+G_d = c2d(G,T_sampling);
+pzmap(G_d)
+[poli, zeri] = pzmap(G_d)
+
+
+%% 2) state space rappresentation
+% final value theorem for discrete sys
+% in prctice I apply a U_bar (step) and can know by knowing the gain of the
+% sys (G(1)) the Y_bar   
+
+G_1 = dcgain(G_d)   % gives me the gain og the sys
