@@ -1,0 +1,21 @@
+% MPC
+
+clear all; close all; clc
+
+% from 1) to 6) we assume to know the x
+
+%% 1) poles and zeros of L
+s = tf('s');
+G = 0.5 / (s^2+0.4*s+1);
+tsim=15;       % time of the simulation
+x_0 = [0 10]'; % initial state
+T_sampling = 0.1;   % seconds
+G_d = c2d(G,T_sampling);
+[A, B, C, D] = ssdata(G_d);
+C_temp = eye(length(A));
+D_temp = zeros(length(B), 1); 
+
+u_min = -5; % constraints
+u_max = 5;
+
+

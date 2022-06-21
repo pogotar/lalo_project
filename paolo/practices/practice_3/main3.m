@@ -4,7 +4,7 @@ clear all; close all; clc    % 05_03    ora 1:09
 
 %% 1) discretise the system, poles and zeros
 s = tf('s');
-G = 0.5 / (s^2+0.4*s+1);
+G = 0.5 / (s^2+0.4*s+1)
 T_sampling = 0.1;   % seconds
 
 G_d = c2d(G,T_sampling);
