@@ -50,12 +50,25 @@ u_max = deg2rad(15);
 u_min = deg2rad(-15);
 
 %% 1)
-Q = 0.01*eye(length(A));
-R = 1000000;
 
 T_sim = 40;
 
-[k_LQ1, P, cl_poles] = lqr(A, B, Q, R) 
+Q1 = 1*eye(length(A));
+R1 = 1;
+[k_LQ1, P, cl_poles] = lqr(A, B, Q1, R1); 
+
+Q2 = 1000*eye(length(A));
+R2 = 1;
+[k_LQ2, P, cl_poles] = lqr(A, B, Q2, R2); 
+
+Q3 = 1*eye(length(A));
+R3 = 100;
+[k_LQ3, P, cl_poles] = lqr(A, B, Q3, R3); 
+
+Q4 = 1*eye(length(A));
+R4 = 10000;
+[k_LQ4, P, cl_poles] = lqr(A, B, Q4, R4); 
+
 
 
 
