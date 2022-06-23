@@ -2,7 +2,6 @@
 
 clear all; close all; clc
 
-% from 1) to 6) we assume to know the x
 
 %% definition of the sys
 s = tf('s');
@@ -27,7 +26,12 @@ u_max = 5;
 Q_LQ_1 = 10000*eye(2); 
 R_LQ_1 = 1;
 
-LQ_d_1 = dlqr(A, B, Q_LQ_1, R_LQ_1 );
+[LQ_d_1, S1, e1] = dlqr(A, B, Q_LQ_1, R_LQ_1 );  % would have been great if it weren't for saturations
+% [K,S,e] = dlqr(A,B,Q,R,N) 
+% calculates the optimal gain matrix K 
+% The default value N=0 is assumed when N is omitted.
+%  returns the infinite horizon solution S of the associated discrete-time Riccati equation
+% and the closed-loop eigenvalues e = eig(A-B*K)
 
 Q_LQ_2 = 10*eye(2); 
 LQ_d_2 = dlqr(A, B, Q_LQ_2, R_LQ_1 );
@@ -35,5 +39,42 @@ LQ_d_2 = dlqr(A, B, Q_LQ_2, R_LQ_1 );
 Q_LQ_3 = 0.1*eye(2); 
 LQ_d_3 = dlqr(A, B, Q_LQ_3, R_LQ_1 );
 
-
 % sim LQ_point_1
+
+
+%% 2) MPC Q_sig  R_sig
+% mpc take directly into account in the computation the constraints
+
+N = 10;
+Q_sig = blkdiag( kron(eye(N-1),Q_LQ_1) , S1);  % X è grosso N
+R_sig = kron(eye(N),R_LQ_1);
+
+
+%% 3) MPC A_sig  B_sig
+
+% A matrix
+Asig = A;
+for i = 2:N
+    Asig = [Asig; A^i];
+end
+
+% B matrix
+Bsig = [];
+temp = [];
+for i = 1:N
+    temp = zeros(size(B,1)*(i-1),1);
+    for j = 0:N-i
+        temp = [temp; A^(j)*B];
+    end
+    Bsig = [Bsig temp];
+end
+            
+
+%% 4) qudprog
+% cost function of the MPC    Q_sig' X Q_sig + U R_sig U
+% cost that accepts quadprog  0.5 U' H U + x_k' F U + 0.5 x_k' M x_k
+
+
+
+
+
