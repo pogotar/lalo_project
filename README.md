@@ -11,3 +11,6 @@ per le saturazioni (il controllo farà sempre il massimo pox)
 quindi si aumenta la R coosì da tenere sotto controllo la u prima che raggiunga le saturazioni
 
 slew rate ??????
+
+![image](https://user-images.githubusercontent.com/94491918/175333394-7b745906-9b54-43a5-97e7-3e09dce46f27.png)
+
