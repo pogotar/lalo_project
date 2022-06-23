@@ -10,8 +10,12 @@ G = 0.5 / (s^2+0.4*s+1)
 tsim = 15;       % time of the simulation
 x_0 = [0 10]'; % initial state
 T_sampling = 0.1;   % seconds
-G_d = c2d(G,T_sampling);
-[A, B, C, D] = ssdata(G_d)
+sys = ss(G)
+sysd = c2d(sys,T_sampling);
+A = sysd.A
+B = sysd.B;
+C = sysd.C;
+D = sysd.D;
 C_temp = eye(length(A));
 D_temp = zeros(length(B), 1); 
 
@@ -26,6 +30,7 @@ R_LQ_1 = 1;
 LQ_d_1 = dlqr(A, B, Q_LQ_1, R_LQ_1 );
 
 Q_LQ_2 = 10*eye(2); %for oscillation reduction (at least no overshoot)
+% more importance on R for not making the u saturate
 LQ_d_2 = dlqr(A, B, Q_LQ_2, R_LQ_1 );
 
 % sim LQ_point_1
