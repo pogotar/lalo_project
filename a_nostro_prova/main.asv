@@ -40,4 +40,4 @@ ylim([-500 500])
 
 % sysd = c2d(sys,Ts);
 C_states = eye(length(A))
-D_states = zeros(length(B), 1)
+D_temp = zeros(length(B), 1)
