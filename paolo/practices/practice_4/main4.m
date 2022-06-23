@@ -29,8 +29,11 @@ R_LQ_1 = 1;
 
 LQ_d_1 = dlqr(A, B, Q_LQ_1, R_LQ_1 );
 
-Q_LQ_2 = 10*eye(2); %for oscillation reduction (at least no overshoot)
-% more importance on R for not making the u saturate
+Q_LQ_2 = 10*eye(2); 
 LQ_d_2 = dlqr(A, B, Q_LQ_2, R_LQ_1 );
+
+Q_LQ_3 = 0.1*eye(2); 
+LQ_d_3 = dlqr(A, B, Q_LQ_3, R_LQ_1 );
+
 
 % sim LQ_point_1
