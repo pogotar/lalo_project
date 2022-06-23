@@ -31,13 +31,31 @@ D = [0
 
 sys = ss(A, B, C, D)
 s = tf('s');
-sigma(sys)
-grid on
-xlim([10^(-10) 10^(10)])
-ylim([-500 500])
+% sigma(sys)
+% grid on
+% xlim([10^(-10) 10^(10)])
+% ylim([-500 500])
+
+C_states = eye(length(A));
+D_states = zeros(length(B), 1);
+
+% stati iniziali
+x0 = [deg2rad(0) deg2rad(15) 0 -300];
+
+% riferimento
+x_ref = [0 0 0 0]; % si considera come eq = 0 questio stati [0 0 128.2 5000]
+
+% vincoli
+u_max = deg2rad(15);
+u_min = deg2rad(-15);
+
+%% 1)
+Q = 0.01*eye(length(A));
+R = 1000000;
+
+T_sim = 40;
+
+[k_LQ1, P, cl_poles] = lqr(A, B, Q, R) 
 
 
 
-% sysd = c2d(sys,Ts);
-C_states = eye(length(A))
-D_states = zeros(length(B), 1)
