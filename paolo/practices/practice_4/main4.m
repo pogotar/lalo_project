@@ -74,7 +74,17 @@ end
 % cost function of the MPC    Q_sig' X Q_sig + U R_sig U
 % cost that accepts quadprog  0.5 U' H U + x_k' F U + 0.5 x_k' M x_k
 
+H = Bsig'*Qsig*Bsig + Rsig;
+M = Asig'*Qsig*Asig;
+F = Asig'*Qsig*Bsig;
+% 0.5 not written as there is in all the term and
+% minimising J or 2J does not change the result
 
 
+%% 5) is it useful the term M?
+% The term 1/2*x_k^T*M*x_k does not contain the control variable so it is
+% not needed to solve optimization problem: remember that the goal of the
+% optimization is to find the optimal control sequence
+% x_k is the initial condition, is given I can't decide it
 
 
