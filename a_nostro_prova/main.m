@@ -86,7 +86,11 @@ gain_taglio = sv(i);  % non proprio 1 ma vabbe
 omega_sampling = 2 * omega_taglio;
 T_sampling = 2*pi/omega_sampling;
 
+sysd = c2d(sys,Ts);
 
+Q_d = Q4; 
+R_d = R4;
+[Klqr_d, P_d, CLP_d] = dlqr(sysd.A, sysd.B, Q_d, R_d);
 
 
 
