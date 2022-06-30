@@ -8,12 +8,14 @@
 % umin: inputs lower limit (scalar)
 % umax: inputs upper limit (scalar)
 % X: measured status at the current instant time
+% x initial state of every iteration
+
 function u = mympc(A,B,Q,R,S,N,umin,umax,x)
-    m=size(B,2);
-    n=size(A,1);
+    m = size(B,1);    % number of inputs
+    n = size(A,1);    % number of states
     
     %% Q and R matrices for Open-Loop MPC (with Q1)
-    Qsig = blkdiag(kron(eye(N-1),Q),S);
+    Qsig = blkdiag( kron(eye(N-1),Q) ,S);
     Rsig = kron(eye(N),R);
 
     %% A and B matrices for the Open-Loop MPC
@@ -42,8 +44,9 @@ function u = mympc(A,B,Q,R,S,N,umin,umax,x)
     f=ft';
 
     %input and status constraints definition
-    lb = [repmat(umin, N*m,1)];  % lower bound
-    ub = [repmat(umax, N*m,1)];  % upper bound   
+    lb = [repmat(umin, N*m,1)];  % lower bound of x
+    ub = [repmat(umax, N*m,1)];  % upper bound of x
+    % refmat repeats a matrix several times
 
     options = optimset('Algorithm', 'interior-point-convex','Diagnostics','off', ...
         'Display','off'); % to toggle off some info that quadprog returns
@@ -52,4 +55,7 @@ function u = mympc(A,B,Q,R,S,N,umin,umax,x)
 
     %get the optimal input value (the receding horizon principle is applied)
     u = U(1:m); % apply only first one of the opt control sequence
+    % receiding horizon principle
+
 end
+    
