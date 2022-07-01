@@ -6,10 +6,11 @@ clear all; close all; clc
 %% definition of the sys
 s = tf('s');
 G = 0.5 / (s^2+0.4*s+1)
+sys = ss(G)
 tsim = 15;       % time of the simulation
 x_0 = [0 10]'; % initial state
 T_sampling = 0.1;   % seconds
-sys = ss(G)
+
 sysd = c2d(sys,T_sampling);
 A = sysd.A
 B = sysd.B;
