@@ -106,4 +106,10 @@ S2 = Pr1;
 % stessa Q e R e stesso terminal cost S
 % solo il prediction horizon diverso per l'MPC
 
-%%) sim regulator LQR discrete comparison
+%%) sim a_MPC
+
+%%
+
+S3 = Q_LQ_1;
+%%) sim a_MPC_diff_N
+
