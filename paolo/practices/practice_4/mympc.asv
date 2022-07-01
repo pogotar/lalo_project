@@ -43,7 +43,7 @@ function u = mympc(A,B,Q,R,S,N,umin,umax,x)
     ft = x'*F;
     f=ft';
 
-    % input and status constraints definition
+    input and status constraints definition
     lb = [repmat(umin, N*m,1)];  % lower bound of x
     ub = [repmat(umax, N*m,1)];  % upper bound of x
     % refmat repeats a matrix several times

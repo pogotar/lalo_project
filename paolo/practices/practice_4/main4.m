@@ -97,7 +97,7 @@ R_LQ_3 = 1;
 N1 = 5;
 QMPC1 = Q_LQ_1; 
 R1 = R_LQ_1;
-S1 = Pr1; 
+S1 = Pr1;   % PR1 is the P_ of the infinite horizon
 
 N2 = 100;
 QMPC2 = Q_LQ_1; 

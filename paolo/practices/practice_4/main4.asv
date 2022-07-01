@@ -29,7 +29,6 @@ D_temp = zeros(length(B), 1);
 %% 1) sim - LQR REGULATOR without oscillations
 Q_LQ_1 = 10000*eye(2); 
 R_LQ_1 = 1;
-
 [LQ_d_1, Pr1, e1] = dlqr(A, B, Q_LQ_1, R_LQ_1 );  % would have been great if it weren't for saturations
 % [K,Pr1,e] = dlqr(A,B,Q,R,N) 
 % calculates the optimal gain matrix K 
@@ -95,14 +94,16 @@ R_LQ_3 = 1;
 
 
 %% 
-N = 5;
-QMPC = Q_LQ; %optimal Q
-R = R_LQ;
-S1 = Pr1; 
+N1 = 5;
+QMPC1 = Q_LQ_1; 
+R1 = R_LQ_1;
+S1 = Pr1;   % PR1 is the P_ of the infinite horizon
 
 N2 = 100;
-QMPC2 = Q_LQ; %optimal Q
-S2 = Pr2;
-
+QMPC2 = Q_LQ_1; 
+R2 = R_LQ_1;
+S2 = Pr1;
+% stessa Q e R e stesso terminal cost S
+% solo il prediction horizon diverso per l'MPC
 
 %%) sim regulator LQR discrete comparison
