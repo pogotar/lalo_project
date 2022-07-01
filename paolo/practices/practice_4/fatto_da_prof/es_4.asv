@@ -3,10 +3,10 @@ close all
 clc
 
 %% SYSTEM DEFINITION
-Gs=tf(0.5,[1 0.4 1])
+Gs=tf(0.5,[1 0.4 1]);
 % or
 s = tf('s');
-G = 0.5/(s^2 + 0.4*s +1)
+G = 0.5/(s^2 + 0.4*s +1);
 sys = ss(G)
 
 %constraints
@@ -21,7 +21,7 @@ x0 = [0 10]'; %initial state
 
 %discrete system and matrices
 sysd = c2d(sys,Ts);
-A = sysd.A;
+A = sysd.A
 B = sysd.B;
 C = sysd.C;
 D = sysd.D;
@@ -32,7 +32,7 @@ D_states=[0 0]';
 %% POINT 1 - LQR REGULATOR without oscillations
 Q_LQ = 10000*eye(2); 
 R_LQ = 1;
-[Kdlqr,Pr,Eh] = dlqr(A,B,Q_LQ,R_LQ);
+[Kdlqr,Pr,E] = dlqr(A,B,Q_LQ,R_LQ);
 S = Pr; %S is the terminal weight obtained through the LQR approach
 
 sat_max=umax;
@@ -43,9 +43,9 @@ Q_LQsat=Q_LQ/1000; %for oscillation reduction (at least no overshoot)
 [KdlqrSat2,Pr_LQsat,E] = dlqr(A,B,Q_LQsat,R_LQ);
 S2=Pr_LQsat;
 
-open('regulator_LQR_discrete_comparison')
-sim('regulator_LQR_discrete_comparison')
-keyboard
+% open('regulator_LQR_discrete_comparison')
+% sim('regulator_LQR_discrete_comparison')
+% keyboard
 
 %% POINT 2 
 N = 10; %prediction horizon
@@ -105,6 +105,7 @@ S=Pr;
 N2=100;
 QMPC2=Q_LQ; %optimal Q
 S2=S;
+Pr
 open('LinearMPC_noConstraints')
 sim('LinearMPC_noConstraints')
 keyboard

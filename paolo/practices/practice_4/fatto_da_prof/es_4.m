@@ -105,6 +105,7 @@ S=Pr;
 N2=100;
 QMPC2=Q_LQ; %optimal Q
 S2=S;
+Pr2 = S2;
 open('LinearMPC_noConstraints')
 sim('LinearMPC_noConstraints')
 keyboard

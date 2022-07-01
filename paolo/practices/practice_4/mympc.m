@@ -11,7 +11,7 @@
 % x initial state of every iteration
 
 function u = mympc(A,B,Q,R,S,N,umin,umax,x)
-    m = size(B,1);    % number of inputs
+    m = size(B,2);    % number of inputs
     n = size(A,1);    % number of states
     
     %% Q and R matrices for Open-Loop MPC (with Q1)
