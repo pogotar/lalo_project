@@ -95,28 +95,30 @@ R_d = R4;
 
 % sim 2
 
-%% 3)  multiple MPC cases no info on constraints
+%% 3)  multiple MPC cases no constraints
 
 N1 = 5;
 Q1 = Q_d; 
-S1 = Q_d; 
+S1 = P_d; 
 R1 = R_d;
 % P_d is the P_ of the infinite horizon with 
 % Q_d = Q4 and R_d = R4
 
-N2 = 5;
+N2 = 100;
 Q2 = Q_d; 
-S2 = 100 * Q_d;
+S2 = P_d;
 R2 = R_d;
 
-N3 = 100;
-Q3 = Q_d; 
-S3 = Q_d; 
-R3 = R_d;
+N1 = 5;
+Q1 = Q_d; 
+S1 = P_d; 
+R1 = R_d;
+% P_d is the P_ of the infinite horizon with 
+% Q_d = Q4 and R_d = R4
 
-N4 = 5;
-Q4 = Q_d; 
-S4 = P_d;
-R4 = R_d;
+N2 = 100;
+Q2 = Q_d; 
+S2 = P_d;
+R2 = R_d;
 
 
