@@ -49,6 +49,9 @@ x_ref = [0 0 0 0]; % si considera come eq = 0 questio stati [0 0 128.2 5000]
 u_max = deg2rad(15);
 u_min = deg2rad(-15);
 
+x2_max = deg2rad(20);
+x2_min = deg2rad(-20);
+
 %% 1)
 
 T_sim = 40;
@@ -135,4 +138,8 @@ N7 = 100;
 Q7 = Q_d; 
 S7 = P_d;
 R7 = 50 * R_d;
+
+
+%% 5)
+
 
