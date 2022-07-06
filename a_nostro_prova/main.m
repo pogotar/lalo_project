@@ -85,8 +85,11 @@ for i = 1:length(w_out)
     end
 end
 
-omega_taglio = w_out(i)
-gain_taglio = sv(i);  % non proprio 1 ma vabbe
+omega_taglio = w_out(i-1);
+grid on
+hold on
+plot(omega_taglio,0,'*','color','r','LineWidth',1)
+gain_taglio = sv(i-1);  
 omega_sampling = 2 * omega_taglio;
 T_sampling = 2*pi/omega_sampling;
 

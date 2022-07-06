@@ -10,7 +10,7 @@
 % X: measured status at the current instant time
 % x initial state of every iteration        
 
-function u = mpc_point_5(A,B,Q,R,S,N,umin,umax,x2_min,x2_max,x)
+function u = mpc_point_5(A,B,Q,R,S,N,u_min,u_max,x2_min,x2_max,x)
     m = size(B,2);    % number of inputs
     n = size(A,1);    % number of states
     
@@ -45,18 +45,26 @@ function u = mpc_point_5(A,B,Q,R,S,N,umin,umax,x2_min,x2_max,x)
     f=ft';
 
     % input and status constraints definition
-    lb = [repmat(umin, N*m,1)];  % lower bound of x
-    ub = [repmat(umax, N*m,1)];  % upper bound of x
+    lb = [repmat(u_min, N*m,1)];  % lower bound of x
+    ub = [repmat(u_max, N*m,1)];  % upper bound of x
     % refmat repeats a matrix several times
+
+    % STATES
+    Ax = [0 1 0 0; 0 -1 0 0];
+    bx = [x2_max; -x2_min];
+    Ax_hat = kron(eye(N),Ax);
+    bx_hat = kron(ones(N,1), bx);
+    
+    % INPUT AND STATES
+    A_hat = [(Ax_hat*Bsig)];
+    b_hat = [(bx_hat-Ax_hat*Asig*x)];
 
     options = optimset('Algorithm', 'interior-point-convex','Diagnostics','off', ...
         'Display','off'); % to toggle off some info that quadprog returns
     %solve the quadratic programming problem
-    A_c_x2 =  [Bsig;Bsig];
-    b_min = -x2_min*ones(N,1)+Asig*x;
-    b_max = x2_max*ones(N,1)-Asig*x;
-    b_c_x2 = [b_min ; b_max];
-    U = quadprog(H,f,Bsig,A_c_x2,b_c_x2,[],[],[],[],[],options);
+    U = quadprog(H,f,A_hat,b_hat,[],[],lb,ub,[],options);
+
+
 
     %get the optimal input value (the receding horizon principle is applied)
     u = U(1:m); % apply only first one of the opt control sequence

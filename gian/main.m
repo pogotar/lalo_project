@@ -124,5 +124,10 @@ P_MPC = Q_LQ_d;
 
 SetN = [20 30 90];
 
+open('MPC_no_constraints_sim.slx')
+sim('MPC_no_constraints_sim.slx')
+
+
+
 
 
