@@ -51,6 +51,7 @@ u_min = deg2rad(-15);
 
 x2_max = deg2rad(20);
 x2_min = deg2rad(-20);
+over_shot_constraint =  0.1 * x0(4);
 
 %% 1)
 
