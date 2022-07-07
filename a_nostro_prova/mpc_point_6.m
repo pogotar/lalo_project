@@ -39,7 +39,7 @@ function u = mpc_point_6(A,B,Q,R,S,N,u_min,u_max,x2_min,x2_max,over_shot_constra
     %% H, F 
     % M not necessary in theoptimisation
     H = Bsig'*Qsig*Bsig + Rsig;
-    % H=(H+H')/2;
+    H=(H+H')/2;
     F = Asig'*Qsig*Bsig;
     ft = x'*F;
     f=ft';
@@ -52,10 +52,10 @@ function u = mpc_point_6(A,B,Q,R,S,N,u_min,u_max,x2_min,x2_max,over_shot_constra
     % STATES
     Ax = [0 1  0 0
           0 -1 0 0
-          0 0  0 start_sign];
+          0 0  0 -start_sign];
     bx = [ x2_max
           -x2_min
-          start_sign*over_shot_constraint];
+          -start_sign*over_shot_constraint];
     Ax_hat = kron(eye(N),Ax);
     bx_hat = kron(ones(N,1), bx);
     

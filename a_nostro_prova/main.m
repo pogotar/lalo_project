@@ -49,9 +49,9 @@ x_ref = [0 0 0 0]; % si considera come eq = 0 questio stati [0 0 128.2 5000]
 u_max = deg2rad(15);
 u_min = deg2rad(-15);
 
-x2_max = deg2rad(50);
-x2_min = deg2rad(-50);
-over_shot_constraint = abs( 1 * x0(4) );
+x2_max = deg2rad(30);
+x2_min = deg2rad(-30);
+over_shot_constraint = abs( 100 );
 start_sign = sign (x0(4));
 
 %% 1)
