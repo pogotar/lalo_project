@@ -10,7 +10,7 @@
 % X: measured status at the current instant time
 % x initial state of every iteration        
 
-function u = mpc_point_6(A,B,Q,R,S,N,u_min,u_max,x2_min,x2_max,over_shot_constraint,start_sign,x)
+function u = mpc_point_6(A,B,Q,R,S,N,u_min,u_max,x2_min,x2_max,over_shot,start_sign,x)
     m = size(B,2);    % number of inputs
     n = size(A,1);    % number of states
     
@@ -55,7 +55,7 @@ function u = mpc_point_6(A,B,Q,R,S,N,u_min,u_max,x2_min,x2_max,over_shot_constra
           0 0  0 -start_sign];
     bx = [ x2_max
           -x2_min
-          -start_sign*over_shot_constraint];
+          -start_sign*over_shot];
     Ax_hat = kron(eye(N),Ax);
     bx_hat = kron(ones(N,1), bx);
     
