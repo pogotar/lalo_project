@@ -1,6 +1,6 @@
 clear all; close all; clc;
 
-%% DATA
+%% DATI
 
 % x1 = angle of attack
 % x2 = pitch angle
@@ -10,7 +10,7 @@ clear all; close all; clc;
 % y2 = altitude
 % y3 = velocità * angolo di v rispetto all'orizzonte
 
-% system matrices
+% matrici del sistema
 A = [-1.2822  0      0.98     0
      0        0      1        0
      -5.4293  0      -1.8366  0
@@ -29,61 +29,59 @@ D = [0
      0
      0];
 
-sys = ss(A, B, C, D);
+sys = ss(A, B, C, D)
 s = tf('s');
+% sigma(sys)
+% grid on
+% xlim([10^(-10) 10^(10)])
+% ylim([-500 500])
 
 C_states = eye(length(A));
 D_states = zeros(length(B), 1);
 
-% initial states
+% stati iniziali
 x0 = [deg2rad(0) deg2rad(15) 0 -300];
 
-% x ref
+% riferimento
 x_ref = [0 0 0 0]; % si considera come eq = 0 questio stati [0 0 128.2 5000]
 
-% constraints
+% vincoli
 u_max = deg2rad(15);
 u_min = deg2rad(-15);
 
-%% 1) LQR continuous
+x2_max = deg2rad(20);
+x2_min = deg2rad(-20);
 
-T_sim = 10;
+over_shot = abs(0);
+start_sign = sign(x0(4));
 
-%first attempt
+slewratemax = 0.2;
+slewratemin = -0.2;
+
+%% 1)
+
+T_sim = 15;
+
 Q1 = 1*eye(length(A));
 R1 = 1;
 [k_LQ1, P, cl_poles] = lqr(A, B, Q1, R1); 
 
-%second attempt
 Q2 = 1000*eye(length(A));
 R2 = 1;
 [k_LQ2, P, cl_poles] = lqr(A, B, Q2, R2); 
 
-%third attempt
 Q3 = 1*eye(length(A));
 R3 = 100;
 [k_LQ3, P, cl_poles] = lqr(A, B, Q3, R3); 
 
-%fourth attempt
 Q4 = 1*eye(length(A));
 R4 = 10000;
-[k_LQ4, P4, cl_poles] = lqr(A, B, Q4, R4); 
+[k_LQ4, P, cl_poles] = lqr(A, B, Q4, R4); 
 
-% open("LQR_continuous.slx")
-% sim("LQR_continuous.slx")
-% keyboard
+% sim_1
 
-% choice
-k_LQ = k_LQ4;
-Q_LQ = Q4;
-R_LQ = R4;
-P_LQ = P4;
-
-%% 2) LQR  discrete time
-
+%% 2) 
 sigma(sys)
-grid on
-hold on
 [sv,w_out] = sigma(sys);
 
 for i = 1:length(w_out)
@@ -92,42 +90,95 @@ for i = 1:length(w_out)
         break
     end
 end
-omega_taglio = w_out(i);
 
-plot(omega_taglio,0,'*','color','r')
-
-% Shannon theorem
-gain_taglio = sv(i);  %this is an approximation
+omega_taglio = w_out(i-1);
+grid on
+hold on
+plot(omega_taglio,0,'*','color','r','LineWidth',1)
+legend('Singular Values','omega_c')
+gain_taglio = sv(i-1);  
 omega_sampling = 2 * omega_taglio;
 T_sampling = 2*pi/omega_sampling;
-
-% discretization
+Ts = T_sampling;
 sysd = c2d(sys,T_sampling);
 
-Q_LQ_d = Q_LQ; 
-R_LQ_d = R_LQ;
-[k_LQ_d, P_LQ_d, CLP_d] = dlqr(sysd.A, sysd.B, Q_LQ_d, R_LQ_d);
+Q_d = Q4; 
+R_d = R4;
+[Klqr_d, P_d, CLP_d] = dlqr(sysd.A, sysd.B, Q_d, R_d);
 
-% open('LQR_discrete.slx')
-% sim('LQR_discrete.slx')
-% keyboard
+% sim 2
 
-%% 3)
-% P_MPC = P_d; S from the theory: the bound of MPC; to achive stationary
-% solution for every N we set S = P stationary solution of the
-% Riccati equation  
+%% 3)  multiple MPC cases no info on constraints
 
-Ts = T_sampling; %to avoid undefined error
-Q_MPC = Q_LQ_d;
-R_MPC = R_LQ_d;
-P_MPC = Q_LQ_d;
+N1 = 5;
+Q1 = Q_d; 
+S1 = Q_d; 
+R1 = R_d;
+% P_d is the P_ of the infinite horizon with 
+% Q_d = Q4 and R_d = R4
 
-SetN = [20 30 90];
+N2 = 5;
+Q2 = Q_d; 
+S2 = 100 * Q_d;
+R2 = R_d;
 
-open('MPC_no_constraints_sim.slx')
-sim('MPC_no_constraints_sim.slx')
+N3 = 100;
+Q3 = Q_d; 
+S3 = Q_d; 
+R3 = R_d;
+
+N4 = 5;
+Q4 = Q_d; 
+S4 = P_d;
+R4 = R_d;
+
+%% 4) 
+
+N5 = 100;
+Q5 = Q_d; 
+S5 = P_d;
+R5 = R_d;
+
+N6 = 100;
+Q6 = 50 * Q_d; 
+S6 = P_d;
+R6 = R_d;
+
+N7 = 100;
+Q7 = Q_d; 
+S7 = P_d;
+R7 = 50 * R_d;
 
 
+%% 5)
+% sim
 
 
+%% 6)
 
+% sim
+
+%% 8)
+
+% x0 = [deg2rad(0) deg2rad(15) 0 -300];
+x0K = [deg2rad(0) deg2rad(-20) 0 -280]; % initial guess for x0
+
+% set power of v_x=0.01 in simulink block
+power_vx = 1e-3;
+% set power of v_y=0.001 in simulink block
+power_vy = 1e-2;
+
+B_noise = [sysd.B ones(size(sysd.B,1),1)];
+D_noise = [D_states zeros(size(D_states,1),1)];
+
+% set Kalman filter parameters
+NK = zeros(4,3); % covariance v_x,v_y
+QK = eye(4); % variance of v_x
+RK = 0.001*eye(3); % variance of v_y
+
+% open('MPC_KF') % ----------------------------------------------------------
+% sim('MPC_KF') % -----------------------------------------------------------
+% keyboard % ----------------------------------------------------------------
+
+QK = blkdiag(1,1,1,1); % variance of v_x
+RK = 10*blkdiag(1,1,1); % variance of v_y
