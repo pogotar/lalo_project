@@ -98,7 +98,7 @@ plot(omega_taglio,0,'*','color','r','LineWidth',1)
 gain_taglio = sv(i-1);  
 omega_sampling = 2 * omega_taglio;
 T_sampling = 2*pi/omega_sampling;
-Ts = T_sampling;
+
 sysd = c2d(sys,T_sampling);
 
 Q_d = Q4; 
@@ -172,8 +172,8 @@ D_noise = [D_states zeros(size(D_states,1),1)];
 
 % set Kalman filter parameters
 NK = zeros(4,3); % covariance v_x,v_y
-QK = eye(4); % variance of v_x
-RK = 0.001*eye(3); % variance of v_y
+QK = blkdiag(1,1,1,1); % variance of v_x
+RK = 0.001*blkdiag(1,1,1); % variance of v_y
 
 % open('MPC_KF') % ----------------------------------------------------------
 % sim('MPC_KF') % -----------------------------------------------------------

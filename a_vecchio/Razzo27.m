@@ -87,7 +87,6 @@ zero_dB = 0;
 w_taglio = pchip(module,pulse,zero_dB); % 40.1521 [rad/s]
 plot(w_taglio,zero_dB,'*','color','r','LineWidth',1)
 legend('Singular Values','w_B')
-keyboard
 
 % w_s > 2*w_taglio --> (2*pi)/T_s > 2*w_taglio --> T_s < pi/w_taglio con
 % w_taglio = 2*pi/T_taglio --> T_s < T_taglio/2

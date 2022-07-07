@@ -70,14 +70,14 @@ function u = MPCwithAllConstraints(A,B,Q,R,S,N,umin,umax,x2_min,x2_max,signX0_4,
     bu_hat = kron(ones(N,1),bu);
     
     % STATES Ax*x<=bx
-%     Ax = [0 1 0 0; 0 -1 0 0; 0 0 0 -signX0_4];
-%     bx = [x2_max -x2_min -signX0_4*over_shot_constraint]';
-%     Ax_hat = kron(eye(N),Ax);
-%     bx_hat = kron(ones(N,1), bx);
+    Ax = [0 1 0 0; 0 -1 0 0; 0 0 0 -signX0_4];
+    bx = [x2_max -x2_min -signX0_4*over_shot_constraint]';
+    Ax_hat = kron(eye(N),Ax);
+    bx_hat = kron(ones(N,1), bx);
     
     % INPUT AND STATES
-%     A_hat = [Au_hat; (Ax_hat*Bsig)];
-%     b_hat = [bu_hat; (bx_hat-Ax_hat*Asig*x)];
+    A_hat = [Au_hat; (Ax_hat*Bsig)];
+    b_hat = [bu_hat; (bx_hat-Ax_hat*Asig*x)];
     
     options = optimset('Algorithm','interior-point-convex',...
         'Diagnostics','off','LargeScale','off','Display','off');
