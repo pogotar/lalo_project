@@ -63,7 +63,10 @@ function u = mpc_point_5(A,B,Q,R,S,N,u_min,u_max,x2_min,x2_max,x)
         'Display','off'); % to toggle off some info that quadprog returns
     %solve the quadratic programming problem
     U = quadprog(H,f,A_hat,b_hat,[],[],lb,ub,[],options);
-
+    
+    if isempty(U)
+        disp('too restrictive contraints')
+    end
 
 
     %get the optimal input value (the receding horizon principle is applied)
