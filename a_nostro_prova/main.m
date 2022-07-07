@@ -51,11 +51,13 @@ u_min = deg2rad(-15);
 
 x2_max = deg2rad(20);
 x2_min = deg2rad(-20);
-over_shot_constraint =  0.1 * x0(4);
+
+over_shot = abs(0);
+start_sign = sign(x0(4));
 
 %% 1)
 
-T_sim = 40;
+T_sim = 15;
 
 Q1 = 1*eye(length(A));
 R1 = 1;
