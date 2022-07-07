@@ -50,9 +50,9 @@ function u = MPCwithAllConstraints(A,B,Q,R,S,N,umin,umax,x2_min,x2_max,signX0_4,
        -u(k) + u(k+1) <= positive_slewrate
        u(k) - u(k+1) <= -negative_slewrate
     %}
-    Au = [1 -1 -1 1]';
-    Au1 = [0 0 1 -1]';
-    bu = [umax -umin slewrateMax -slewrateMin]';
+    Au = [-1 1]';
+    Au1 = [1 -1]';
+    bu = [slewrateMax -slewrateMin]';
     Au_hat = [];
     for i = 1:N
         Au_hat_i = [];

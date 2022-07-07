@@ -7,18 +7,18 @@
 % N: prediction horizon
 % umin: inputs lower limit (scalar)
 % umax: inputs upper limit (scalar)
-% x2_min: state 2 lower limit (scalar)
-% x2_max: state 2 upper limit (scalar)
-% signX0_4: sign of the initial state x4 of the altitude
-% over_shot_constraint: lower/upper bound for the altitude x4
-% x: measured status at the current instant time
-function u = MPCwithAllConstraints(A,B,Q,R,S,N,umin,umax,x2_min,x2_max,signX0_4,over_shot_constraint,slewrateMax,slewrateMin,x)
+% X: measured status at the current instant time
+% x initial state of every iteration        
+
+function u = mpc_point_7(A,B,Q,R,S,N,u_min,u_max,x2_min,x2_max,over_shot,start_sign,slewratemin,slewratemax,x)
+    m = size(B,2);    % number of inputs
+    n = size(A,1);    % number of states
+    
     %% Q and R matrices for Open-Loop MPC (with Q1)
-    Qsig = blkdiag(kron(eye(N-1),Q),S);
+    Qsig = blkdiag( kron(eye(N-1),Q) ,S);
     Rsig = kron(eye(N),R);
 
     %% A and B matrices for the Open-Loop MPC
-    
     % A matrix
     Asig = A;
     for i = 2:N
@@ -37,22 +37,33 @@ function u = MPCwithAllConstraints(A,B,Q,R,S,N,umin,umax,x2_min,x2_max,signX0_4,
     end
 
     %% H, F 
+    % M not necessary in theoptimisation
     H = Bsig'*Qsig*Bsig + Rsig;
     H=(H+H')/2;
     F = Asig'*Qsig*Bsig;
     ft = x'*F;
     f=ft';
-    
-    % INPUTS Au*x<=bu
-    %{
-       u(k) <= umax
-       -u(k) <= -umin --> u >= umin
-       -u(k) + u(k+1) <= positive_slewrate
-       u(k) - u(k+1) <= -negative_slewrate
-    %}
-    Au = [1 -1 -1 1]';
-    Au1 = [0 0 1 -1]';
-    bu = [umax -umin slewrateMax -slewrateMin]';
+
+    % input and status constraints definition
+    lb = [repmat(u_min, N*m,1)];  % lower bound of x
+    ub = [repmat(u_max, N*m,1)];  % upper bound of x
+    % refmat repeats a matrix several times
+
+    % STATES
+    Ax = [0 1  0 0
+          0 -1 0 0
+          0 0  0 -start_sign];
+    bx = [ x2_max
+          -x2_min
+          -start_sign*over_shot];
+
+
+    Ax_hat = [kron(eye(N),Ax)];
+    bx_hat = [kron(ones(N,1), bx)];
+
+    bu = [slewratemax -slewratemin]';
+    Au = [-1 1]';
+    Au1 = [1 -1]';
     Au_hat = [];
     for i = 1:N
         Au_hat_i = [];
@@ -62,32 +73,32 @@ function u = MPCwithAllConstraints(A,B,Q,R,S,N,umin,umax,x2_min,x2_max,signX0_4,
             elseif (i==j-1)
                 Au_hat_i = [Au_hat_i Au1];
             else
-                Au_hat_i = [Au_hat_i [0 0 0 0]'];
+                Au_hat_i = [Au_hat_i [0 0]'];
             end
         end
         Au_hat = [Au_hat; Au_hat_i];
     end
     bu_hat = kron(ones(N,1),bu);
-    
-    % STATES Ax*x<=bx
-%     Ax = [0 1 0 0; 0 -1 0 0; 0 0 0 -signX0_4];
-%     bx = [x2_max -x2_min -signX0_4*over_shot_constraint]';
-%     Ax_hat = kron(eye(N),Ax);
-%     bx_hat = kron(ones(N,1), bx);
-    
+
     % INPUT AND STATES
-%     A_hat = [Au_hat; (Ax_hat*Bsig)];
-%     b_hat = [bu_hat; (bx_hat-Ax_hat*Asig*x)];
-    
-    options = optimset('Algorithm','interior-point-convex',...
-        'Diagnostics','off','LargeScale','off','Display','off');
+    A_hat = [Ax_hat*Bsig
+             Au_hat         ];
+    b_hat = [bx_hat-Ax_hat*Asig*x
+             bu_hat               ];
+
+    options = optimset('Algorithm', 'interior-point-convex','Diagnostics','off', ...
+        'Display','off'); % to toggle off some info that quadprog returns
     %solve the quadratic programming problem
-    [U,fval,exitflag,output] = quadprog(H,f,A_hat,b_hat,[],[],[],[],[],options);
-    
+    U = quadprog(H,f,A_hat,b_hat,[],[],lb,ub,[],options);
+
     if isempty(U)
-        [U,fval,exitflag,output] = quadprog(H,f,Au_hat,bu_hat,[],[],[],[],[],options);
+        disp('too restrictive contraints')
     end
 
+
     %get the optimal input value (the receding horizon principle is applied)
-    u = U(1);
+    u = U(1:m); % apply only first one of the opt control sequence
+    % receiding horizon principle
+
 end
+    

@@ -55,6 +55,9 @@ x2_min = deg2rad(-20);
 over_shot = abs(0);
 start_sign = sign(x0(4));
 
+slewratemax = 0.2;
+slewratemin = -0.2;
+
 %% 1)
 
 T_sim = 15;
