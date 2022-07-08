@@ -55,8 +55,8 @@ x2_min = deg2rad(-20);
 over_shot = abs(0);
 start_sign = sign(x0(4));
 
-slewratemax = 0.2;
-slewratemin = -0.2;
+slewratemax = deg2rad(30);
+slewratemin = deg2rad(-30);
 
 %% 1)
 
@@ -109,14 +109,14 @@ R_d = R4;
 
 %% 3)  multiple MPC cases no info on constraints
 
-N1 = 5;
+N1 = 15;
 Q1 = Q_d; 
 S1 = Q_d; 
 R1 = R_d;
 % P_d is the P_ of the infinite horizon with 
 % Q_d = Q4 and R_d = R4
 
-N2 = 5;
+N2 = 15;
 Q2 = Q_d; 
 S2 = 100 * Q_d;
 R2 = R_d;
@@ -156,6 +156,12 @@ R7 = 50 * R_d;
 %% 6)
 
 % sim
+
+%% 7)
+slewratemax = slewratemax*T_sampling;
+slewratemin = slewratemin*T_sampling;
+
+%sim
 
 %% 8)
 
