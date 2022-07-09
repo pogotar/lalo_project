@@ -99,6 +99,7 @@ gain_taglio = sv(i-1);
 omega_sampling = 2 * omega_taglio;
 T_sampling = 2*pi/omega_sampling;
 Ts = T_sampling;
+
 sysd = c2d(sys,T_sampling);
 
 Q_d = Q4; 
