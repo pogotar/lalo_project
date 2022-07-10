@@ -166,8 +166,8 @@ slewratemin = slewratemin*T_sampling;
 
 %% 8)
 
-% x0 = [deg2rad(0) deg2rad(15) 0 -300];
-x0K = [deg2rad(0) deg2rad(-20) 0 -280]; % initial guess for x0
+x0 = [deg2rad(0) deg2rad(15) 0 -300];
+%x0K = [deg2rad(0) deg2rad(-20) 0 -280]; % initial guess for x0
 
 % set power of v_x=0.01 in simulink block
 power_vx = 1e-3;
