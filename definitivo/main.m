@@ -31,10 +31,17 @@ D = [0
 
 sys = ss(A, B, C, D)
 s = tf('s');
-% sigma(sys)
-% grid on
-% xlim([10^(-10) 10^(10)])
-% ylim([-500 500])
+
+poles_openloop = eig(A);
+if real(poles_openloop) < 0
+    fprintf('OPEN LOOP SYSTEM STABLE\n\n')
+else
+    fprintf('OPEN LOOP SYSTEM UNSTABLE\n\n')
+end
+
+if((rank(obsv(sys)) == size(A,1)) && rank(ctrb(sys)) == size(A,1))
+    fprintf('SYSTEM REACHABLE AND OBSERVABLE\n\n')
+end
 
 C_states = eye(length(A));
 D_states = zeros(length(B), 1);
@@ -56,8 +63,8 @@ over_shot = abs(0);
 start_sign = sign(x0(4));
 
 %just defined
-slewratemax = 0;
-slewratemin = 0;
+slewratemax = deg2rad(30);
+slewratemin = -deg2rad(30);
 
 %% 1)
 
