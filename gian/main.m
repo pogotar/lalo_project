@@ -43,6 +43,11 @@ D_states = zeros(length(B), 1);
 x0 = [deg2rad(0) deg2rad(15) 0 -300];
 
 % riferimento
+%%
+% 
+% * ITEM1
+% * ITEM2
+% 
 x_ref = [0 0 0 0]; % si considera come eq = 0 questio stati [0 0 128.2 5000]
 
 % vincoli
